@@ -55,5 +55,44 @@ dangerouslySetInnerHTML拆开看就是dangerously Set InnerHTML，意为危险�
 
 至于为啥危险，大概是为了防止被插入脚本攻击吧，react中不管插入啥都会使字符串的方式显示，除非用一个花括号括住。这里又要提一嘴，将变量渲染到dom节点上，vue是双大括号，react是单大括号。如果是渲染成属性，vue还得加个冒号“:”，react就不用。
 
+react的父子组件传值也蛮有意思，这个只是单向数据流，和vue一样（vue的双向数据流指v-model那块），父传子props是不能修改的。不过vue里面可以写上一个props数组或者对象接收父组件传过来的值，而react则是直接在子组件使用this.props.yourname实现数据的渲染。
+
+如果想用子组件操作父组件数据，vue的解决方式是用一个emit函数，而react则是直接就把父组件的函数给传过来，在子组件调用父组件的函数进行数据的操作，这个思路真是霸道！
+
+还有要说的，react引入的组件必须是首字母开头大写，vue是可大可小，react就比较严谨了，凡是首字母大写开头的都是组件。
+
+react的class和html的class重名了，所以html这里是改成了className，除此之外还有属性for，在class里面，属性for用htmlFor代替
+
+还有一个要说的，render里面return的html必须用一个div包裹着，如果不想用div的话可以用Fragment，Fragment是react提供的一个不会在浏览器渲染出来的标签，不过如果想用的话必须要在上面引入Fragment，写法如下：
+
+```javascript
+import React, { Component , Fragment} from 'react'
+class items extends Component { 
+    render() {
+        return (
+            <Fragment>
+                <li>
+                    <i className="indexnum">{this.props.itemIndex + 1}</i>
+                    {this.props.text}
+                    <i className="close" onClick={this.closeHandle}></i>
+                </li>
+            </Fragment>
+        )
+    }
+    closeHandle = () => {
+        this.props.delete(this.props.itemIndex)
+    }
+}
+
+export default items 
+```
+当然如果不想写的话也可以和上面一样直接用“<></>”代替
 
 
+
+开发环境： 
+```
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
+    "react-scripts": "2.1.5"
+```
